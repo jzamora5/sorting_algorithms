@@ -134,6 +134,8 @@ void merge_sort(int *array, size_t size)
 		return;
 
 	buff = malloc(sizeof(int) * size);
+	if (buff == NULL)
+		return;
 
 	copy(array, buff, size);
 
