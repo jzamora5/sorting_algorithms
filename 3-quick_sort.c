@@ -7,16 +7,21 @@
  * @array: data to sort
  * @i: first value
  * @j: second value
+ * @size: size of data
  *
  * Return: No Return
  */
-void _swap(int *array, int i, int j)
+void _swap(int *array, int i, int j, int size)
 {
 	int tmp;
 
-	tmp = array[i];
-	array[i] = array[j];
-	array[j] = tmp;
+	if (array[i] != array[j])
+	{
+		tmp = array[i];
+		array[i] = array[j];
+		array[j] = tmp;
+		print_array(array, size);
+	}
 }
 
 /**
@@ -33,21 +38,16 @@ int partition(int *array, int min, int max, size_t size)
 {
 	int i = min, j, pivot  = array[max];
 
-	(void) size;
 	for (j = min; j <= max; j++)
 	{
 		if (array[j] < pivot)
 		{
-			_swap(array, i, j);
-			if (i != j)
-				print_array(array, size);
+			_swap(array, i, j, size);
 			i++;
 		}
 
 	}
-	_swap(array, i, max);
-	if (i != max)
-		print_array(array, size);
+	_swap(array, i, max, size);
 
 	return (i);
 }
