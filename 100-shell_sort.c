@@ -1,5 +1,5 @@
 #include "sort.h"
-
+#include <stdio.h>
 /**
  * _swap - swaped 2 values.
  * @array: the array for swap him values.
@@ -24,10 +24,10 @@ void _swap(int *array, int i, int j)
  */
 void shell_sort(int *array, size_t size)
 {
+	size_t h = 0,  i, j;
+
 	if (size < 2)
 		return;
-
-	size_t h = 0,  i, j;
 
 	while (h < size / 3)
 		h = h * 3 + 1;
