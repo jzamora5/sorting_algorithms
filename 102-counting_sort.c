@@ -48,6 +48,8 @@ void counting_sort(int *array, size_t size)
 	int k = 0;
 	int *ptr = NULL, *sort_ar = NULL;
 
+	if (size < 2)
+		return;
 	/*Know the largest number in the array*/
 	k = _bigest(array, size);
 	/*Make the help array*/
