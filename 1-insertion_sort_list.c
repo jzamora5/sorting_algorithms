@@ -44,11 +44,12 @@ void _swap(listint_t **node, listint_t **list)
  */
 void insertion_sort_list(listint_t **list)
 {
-	listint_t  *head = *list, *tback, *aux;
+	listint_t  *head, *tback, *aux;
 
-	if (!list || !head || (!(head->prev) && !(head->next)))
+	if (!list || !(*list) || (!((*list)->prev) && !((*list)->next)))
 		return;
 
+	head = *list;
 	while (head && head->next)
 	{
 		if (head->n > head->next->n)
