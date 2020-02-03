@@ -6,21 +6,16 @@
  * @array: data to sort
  * @i: first value
  * @j: second value
- * @size: size of data
  *
  * Return: No Return
  */
-void _swap(int *array, int i, int j, int size)
+void _swap(int *array, int i, int j)
 {
 	int tmp;
 
-	if (array[i] != array[j])
-	{
-		tmp = array[i];
-		array[i] = array[j];
-		array[j] = tmp;
-		print_array(array, size);
-	}
+	tmp = array[i];
+	array[i] = array[j];
+	array[j] = tmp;
 }
 
 /**
@@ -45,10 +40,10 @@ int partition(int *array, int min, int max, size_t size)
 		while (array[j] > pivot)
 			j--;
 
-		if (i < j)
-			_swap(array, i, j, size);
-		else
+		if (i >= j)
 			return (i);
+		_swap(array, i, j);
+		print_array(array, size);
 	}
 }
 
