@@ -32,7 +32,7 @@ void shell_sort(int *array, size_t size)
 	if (size < 2)
 		return;
 
-	while (h < size / 3)
+	while (h <= size / 3)
 		h = h * 3 + 1;
 
 	while (h >= 1)
