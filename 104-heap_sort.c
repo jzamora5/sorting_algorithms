@@ -11,14 +11,15 @@
 void _swap(int *array, int i, int j, const int r_size)
 {
 	int tmp;
+	(void) r_size;
 
-	if (array[i] != array[j])
+	if (i != j)
 	{
 		tmp = array[i];
 		array[i] = array[j];
 		array[j] = tmp;
+		print_array(array, (size_t)r_size);
 	}
-	print_array(array, (size_t)r_size);
 }
 
 /**
