@@ -1,65 +1,75 @@
-#include <stdlib.h>
 #include "sort.h"
-#include <stdio.h>
 /**
- * bubble_sortLSD - bubble sort based off LSD
+ * getMax - obtains Max Value of Array
  *
  * @array: array of data to be sorted
- * @size: size of data
- * @lsd: Less significant digit
+ * @size: size of array
  *
  * Return: No Return
  */
-void bubble_sortLSD(int *array, int size, int lsd)
+int getMax(int *array, int size)
 {
-	int i, j, tmp, divs = 1;
+	int max = array[0];
 
-	for (i = 1; i < lsd; i++)
-		divs *= 10;
-
-	for (i = 0; i <= size - 1; i++)
-	{
-		for (j = 0; j <= size - 2; j++)
-		{
-			if ((array[j] / divs % 10) > (array[j + 1] / divs % 10))
-			{
-				tmp = array[j];
-				array[j] = array[j + 1];
-				array[j + 1] = tmp;
-			}
-		}
-	}
+	for (int i = 1; i < size; i++)
+		if (array[i] > max)
+			max = array[i];
+	return (max);
 }
 /**
- * rsort - recursive radix sort with bubble sort
+ * countaux - Auxiliary function of cSort
  *
  * @array: array of data to be sorted
+ * @max: max value in array
+ * @place: Less significant digit
  * @size: size of data
- * @lsd: Less significant digit
+ * @output: counting sort output
  *
  * Return: No Return
  */
-void rsort(int *array, int size, int lsd)
+void countaux(int *array, int max, int place, int size, int *output)
 {
-	int carr[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-	int i, num, divs = 1;
 
-	for (i = 1; i < lsd; i++)
-		divs *= 10;
+	int count[max + 1];
 
-	for (i = 0; i < size; i++)
+	for (int i = 0; i < max; ++i)
+		count[i] = 0;
+
+	for (int i = 0; i < size; i++)
+		count[(array[i] / place) % 10]++;
+
+	for (int i = 1; i < 10; i++)
+		count[i] += count[i - 1];
+
+	for (int i = size - 1; i >= 0; i--)
 	{
-		num = array[i] / divs % 10;
-		carr[num] += 1;
+		output[count[(array[i] / place) % 10] - 1] = array[i];
+		count[(array[i] / place) % 10]--;
 	}
+	for (int i = 0; i < size; i++)
+		array[i] = output[i];
 
-	if (carr[0] == size)
-		return;
+}
+/**
+ * cSort - counting Sort
+ *
+ * @array: array of data to be sorted
+ * @size: size of data
+ * @place: Less significant digit
+ *
+ * Return: No Return
+ */
+void cSort(int *array, int size, int place)
+{
+	int output[size + 1];
+	int max = (array[0] / place) % 10;
 
-	bubble_sortLSD(array, size, lsd);
-	print_array(array, size);
-	rsort(array, size, lsd + 1);
-
+	for (int i = 1; i < size; i++)
+	{
+		if (((array[i] / place) % 10) > max)
+			max = array[i];
+	}
+	countaux(array, max, place, size, output);
 }
 /**
  * radix_sort - sorts an array of integers in ascending order using the Radix
@@ -72,10 +82,16 @@ void rsort(int *array, int size, int lsd)
  */
 void radix_sort(int *array, size_t size)
 {
-	int lsd = 1;
+	int max;
 
 	if (size < 2)
 		return;
 
-	rsort(array, size, lsd);
+	max = getMax(array, size);
+
+	for (int place = 1; max / place > 0; place *= 10)
+	{
+		cSort(array, size, place);
+		print_array(array, size);
+	}
 }
