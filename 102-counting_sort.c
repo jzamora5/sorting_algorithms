@@ -1,5 +1,5 @@
 #include "sort.h"
-
+#include <stdio.h>
 /**
  * _bigest -  Give me the largest number in a array of integers
  * @array: The Int array
@@ -75,10 +75,12 @@ void counting_sort(int *array, size_t size)
 
 	for (i = 0; i < size; i++)
 	{
-		sort_ar[ptr[array[i]]] = array[i];
+		sort_ar[ptr[array[i]] - 1] = array[i];
 		ptr[array[i]] -= 1;
 	}
-	/*set the array of the serted array*/
-	for (i = 0; i < size; i++)
-		array[i] = sort_ar[i + 1];
+	for (j = 0; j < size; j++)
+		array[j] = sort_ar[j];
+
+	free(sort_ar);
+	free(ptr);
 }
