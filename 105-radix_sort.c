@@ -17,61 +17,6 @@ int getMax(int *array, int size)
 	return (max);
 }
 /**
- * countaux - Auxiliary function of cSort
- *
- * @array: array of data to be sorted
- * @max: max value in array
- * @place: Less significant digit
- * @size: size of data
- * @output: counting sort output
- *
- * Return: No Return
- */
-void countaux(int *array, int max, int place, int size, int *output)
-{
-
-	int count[max + 1];
-
-	for (int i = 0; i < max; ++i)
-		count[i] = 0;
-
-	for (int i = 0; i < size; i++)
-		count[(array[i] / place) % 10]++;
-
-	for (int i = 1; i < 10; i++)
-		count[i] += count[i - 1];
-
-	for (int i = size - 1; i >= 0; i--)
-	{
-		output[count[(array[i] / place) % 10] - 1] = array[i];
-		count[(array[i] / place) % 10]--;
-	}
-	for (int i = 0; i < size; i++)
-		array[i] = output[i];
-
-}
-/**
- * cSort - counting Sort
- *
- * @array: array of data to be sorted
- * @size: size of data
- * @place: Less significant digit
- *
- * Return: No Return
- */
-void cSort(int *array, int size, int place)
-{
-	int output[size + 1];
-	int max = (array[0] / place) % 10;
-
-	for (int i = 1; i < size; i++)
-	{
-		if (((array[i] / place) % 10) > max)
-			max = array[i];
-	}
-	countaux(array, max, place, size, output);
-}
-/**
  * radix_sort - sorts an array of integers in ascending order using the Radix
  * sort algorithm
  *
@@ -82,16 +27,36 @@ void cSort(int *array, int size, int place)
  */
 void radix_sort(int *array, size_t size)
 {
-	int max;
+
+	int bucket[10][10], bucket_cnt[10];
+	int i, j, k, r, limit = 0, divs = 1, max, pass, s;
 
 	if (size < 2)
 		return;
 
+	s = size;
 	max = getMax(array, size);
 
-	for (int place = 1; max / place > 0; place *= 10)
+	while (max > 0)
+		limit++, max /= 10;
+
+	for (pass = 0; pass < limit; pass++)
 	{
-		cSort(array, size, place);
+		for (i = 0; i < 10; i++)
+			bucket_cnt[i] = 0;
+
+		for (i = 0; i < s; i++)
+		{
+			r = (array[i] / divs) % 10;
+			bucket[r][bucket_cnt[r]] = array[i];
+			bucket_cnt[r] += 1;
+		}
+
+		i = 0;
+		for (k = 0; k < 10; k++)
+			for (j = 0; j < bucket_cnt[k]; j++)
+				array[i] = bucket[k][j], i++;
+		divs *= 10;
 		print_array(array, size);
 	}
 }
