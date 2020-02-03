@@ -11,9 +11,12 @@ void _swap(int *array, int i, int j)
 {
 	int tmp;
 
-	tmp = array[i];
-	array[i] = array[j];
-	array[j] = tmp;
+	if (array[i] != array[j])
+	{
+		tmp = array[i];
+		array[i] = array[j];
+		array[j] = tmp;
+	}
 }
 
 /**
@@ -31,6 +34,7 @@ void shell_sort(int *array, size_t size)
 
 	while (h < size / 3)
 		h = h * 3 + 1;
+
 	while (h >= 1)
 	{
 		for (i = h; i < size; i++)
