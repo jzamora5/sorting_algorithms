@@ -2,85 +2,63 @@
 #include "sort.h"
 #include <stdio.h>
 /**
- * csort2 - auxiliary function of radix sort
+ * bubble_sortLSD - bubble sort based off LSD
  *
  * @array: array of data to be sorted
- * @buff: malloc buffer
  * @size: size of data
  * @lsd: Less significant digit
  *
  * Return: No Return
  */
-void csort2(int *array, int **buff, int size, int lsd)
+void bubble_sortLSD(int *array, int size, int lsd)
 {
-	int i, j, csize = 10, num;
-	int carr[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-	int carr2[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	int i, j, tmp, divs = 1;
 
-	for (i = 0; i < size; i++)
-	{
-		num = array[i];
-		for (j = 0; j < lsd; j++)
-			if (j > 0)
-				num = num / 10;
-		num = num % 10;
-		buff[num][carr[num]] = array[i];
-		carr[num] += 1;
-	}
+	for (i = 1; i < lsd; i++)
+		divs *= 10;
 
-	for (i = 0, j = 0; i < csize; i++)
+	for (i = 0; i <= size - 1; i++)
 	{
-		while (carr[i] > 0)
+		for (j = 0; j <= size - 2; j++)
 		{
-			array[j] = buff[i][carr2[i]];
-			carr2[i] += 1, carr[i] -= 1;
-			j++;
+			if ((array[j] / divs % 10) > (array[j + 1] / divs % 10))
+			{
+				tmp = array[j];
+				array[j] = array[j + 1];
+				array[j + 1] = tmp;
+			}
 		}
 	}
-
-	print_array(array, size);
-
-
 }
 /**
- * csort - auxiliary function of radix sort
+ * rsort - recursive radix sort with bubble sort
  *
  * @array: array of data to be sorted
  * @size: size of data
  * @lsd: Less significant digit
- * @buff: malloc buffer
  *
  * Return: No Return
  */
-void csort(int *array, int size, int lsd, int **buff)
+void rsort(int *array, int size, int lsd)
 {
 	int carr[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-	int i, j, num, csize = 10;
+	int i, num, divs = 1;
+
+	for (i = 1; i < lsd; i++)
+		divs *= 10;
 
 	for (i = 0; i < size; i++)
 	{
-		num = array[i];
-		for (j = 0; j < lsd; j++)
-			if (j > 0)
-				num = num / 10;
-		num = num % 10;
+		num = array[i] / divs % 10;
 		carr[num] += 1;
 	}
 
 	if (carr[0] == size)
 		return;
 
-	for (i = 0; i < csize; i++)
-		if (carr[i] != 0)
-			buff[i] = malloc(sizeof(int) * carr[i]);
-
-	csort2(array, buff, size, lsd);
-
-	for (i = 0; i < csize; i++)
-		if (carr[i] > 0)
-			free(buff[i]);
-
-	csort(array, size, lsd + 1, buff);
+	bubble_sortLSD(array, size, lsd);
+	print_array(array, size);
+	rsort(array, size, lsd + 1);
 
 }
 /**
@@ -94,17 +72,10 @@ void csort(int *array, int size, int lsd, int **buff)
  */
 void radix_sort(int *array, size_t size)
 {
-	int **buff;
+	int lsd = 1;
 
 	if (size < 2)
 		return;
 
-	buff = malloc(sizeof(int *) * 10);
-	if (!buff)
-		return;
-
-	csort(array, size, 1, buff);
-
-	free(buff);
-
+	rsort(array, size, lsd);
 }
