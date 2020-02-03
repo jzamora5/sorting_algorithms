@@ -59,7 +59,7 @@ void heap_sort(int *array, size_t size)
 	const int r_size = (const int)size;
 	int i;
 
-	if (size < 2)
+	if (size < 2 || !array)
 		return;
 
 	for (i = size / 2 - 1; i >= 0; i--)
