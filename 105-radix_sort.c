@@ -1,88 +1,24 @@
 #include <stdlib.h>
 #include "sort.h"
+#include "sort.h"
+
 /**
- * csort2 - auxiliary function of radix sort
+ * getMax - obtains Max Value of Array
  *
  * @array: array of data to be sorted
- * @buff: malloc buffer
- * @size: size of data
- * @lsd: Less significant digit
+ * @size: size of array
  *
  * Return: No Return
  */
-void csort2(int *array, int **buff, int size, int lsd)
+int getMax(int *array, int size)
 {
-	int i, j, csize = 10, num;
-	int carr[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-	int carr2[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	int max, i;
 
-	for (i = 0; i < size; i++)
-	{
-		num = array[i];
-		for (j = 0; j < lsd; j++)
-			if (j > 0)
-				num = num / 10;
-		num = num % 10;
-		buff[num][carr[num]] = array[i];
-		carr[num] += 1;
-	}
-
-	for (i = 0, j = 0; i < csize; i++)
-	{
-		while (carr[i] > 0)
-		{
-			array[j] = buff[i][carr2[i]];
-			carr2[i] += 1, carr[i] -= 1;
-			j++;
-		}
-	}
-
-	print_array(array, size);
-}
-/**
- * csort - auxiliary function of radix sort
- *
- * @array: array of data to be sorted
- * @size: size of data
- * @lsd: Less significant digit
- *
- * Return: No Return
- */
-void csort(int *array, int size, int lsd)
-{
-	int carr[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-	int i, j, num, csize = 10, **buff;
-
-	for (i = 0; i < size; i++)
-	{
-		num = array[i];
-		for (j = 0; j < lsd; j++)
-			if (j > 0)
-				num = num / 10;
-		num = num % 10;
-		carr[num] += 1;
-	}
-
-	if (carr[0] == size)
-		return;
-
-	buff = malloc(sizeof(int *) * 10);
-	if (!buff)
-		return;
-
-	for (i = 0; i < csize; i++)
-		if (carr[i] != 0)
-			buff[i] = malloc(sizeof(int) * carr[i]);
-
-
-	csort2(array, buff, size, lsd);
-
-	csort(array, size, lsd + 1);
-
-	for (i = 0; i < csize; i++)
-		if (carr[i] > 0)
-			free(buff[i]);
-	free(buff);
+	max = array[0];
+	for (i = 1; i < size; i++)
+	      	if (array[i] > max)
+			max = array[i];
+	return (max);
 }
 /**
  * radix_sort - sorts an array of integers in ascending order using the Radix
@@ -95,7 +31,35 @@ void csort(int *array, int size, int lsd)
  */
 void radix_sort(int *array, size_t size)
 {
+
+	int bckt[10][10], bcktC[10], i, j, k, r, limit, divs, max, pass, s;
+
 	if (size < 2)
 		return;
-	csort(array, size, 1);
+
+	limit = 0, divs = 1;
+	s = size;
+	max = getMax(array, size);
+
+	while (max > 0)
+		limit++, max /= 10;
+
+	for (pass = 0; pass < limit; pass++)
+	{
+		for (i = 0; i < 10; i++)
+			bcktC[i] = 0;
+
+		for (i = 0; i < s; i++)
+		{
+			r = (array[i] / divs) % 10;
+			bckt[r][bcktC[r]] = array[i];
+			bcktC[r] += 1;
+		}
+
+		for (i = 0, k = 0; k < 10; k++)
+			for (j = 0; j < bcktC[k]; j++)
+				array[i] = bckt[k][j], i++;
+		divs *= 10;
+		print_array(array, size);
+	}
 }
