@@ -61,7 +61,7 @@ What you should learn from this project:
 
 
 ### [12. Dealer](./1000-sort_deck.c)
-* 
+* Write a function that sorts a deck of cards.
 
 
 ---
