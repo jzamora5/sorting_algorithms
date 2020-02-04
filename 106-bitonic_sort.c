@@ -79,9 +79,9 @@ void _sort(int *array, int low, int size, int dir, const int r_size)
 	if (size > 1)
 	{
 		if (dir == 1)
-			printf("Merging [%d/%d] (UP)\n", size, r_size);
+			printf("Merging [%d/%d] (UP):\n", size, r_size);
 		if (dir == 0)
-			printf("Merging [%d/%d] (DOWN)\n", size, r_size);
+			printf("Merging [%d/%d] (DOWN):\n", size, r_size);
 		printcheck(array, low, low + k - 1);
 
 		k = size / 2;
@@ -90,14 +90,14 @@ void _sort(int *array, int low, int size, int dir, const int r_size)
 		_sort(array, low + k, k, 0, r_size);
 
 		bitonic_merge(array, low, size, dir, r_size);
-		if (dir == 1 && size >= 2)
+		if (dir == 1)
 		{
-			printf("Result [%d/%d] (UP)\n", size, r_size);
+			printf("Result [%d/%d] (UP):\n", size, r_size);
 			printcheck(array, low, low + 2 * k - 1);
 		}
-		if (dir == 0 && size >= 2)
+		if (dir == 0)
 		{
-			printf("Result [%d/%d] (DOWN)\n", size, r_size);
+			printf("Result [%d/%d] (DOWN):\n", size, r_size);
 			printcheck(array, low, low + 2 * k - 1);
 		}
 	}
@@ -113,7 +113,7 @@ void bitonic_sort(int *array, size_t size)
 	int up = 1;
 	const int r_size = (int)size;
 
-	if (size < 2)
+	if (size < 2 || !array)
 		return;
 
 	_sort(array, 0, (int)size, up, r_size);
